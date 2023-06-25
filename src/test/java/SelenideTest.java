@@ -1,30 +1,29 @@
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.commands.Clear;
-import com.codeborne.selenide.selector.ByAttribute;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
-import java.lang.module.Configuration;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.appear;
+import static com.codeborne.selenide.Condition.disappear;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelenideTest {
 
-    @Test
-    void shouldSendFormWithValidValues() {
+    private String generateDate(int addDays, String pattern) {
+        return LocalDate.now().plusDays(addDays).format(DateTimeFormatter.ofPattern(pattern));
+    }
 
-        open("http://localhost:7777/");
+    @Test
+    public void shouldSendFormWithValidValues() {
+
+        open("http://localhost:9999/");
         $("[placeholder = 'Город']").setValue("Владивосток");
-        $$("button.icon-button").get(0).click();
-        $(".calendar__layout").should(appear, Duration.ofSeconds(4));
-        $("[data-day='1683813600000']").click();
-        $(".calendar__layout").should(disappear);
+        String currentDate = generateDate(4,"dd.MM.yyyy");
+        $("[data-test-id=date] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
+        $("[data-test-id=date] input").sendKeys(currentDate);
         $("[data-test-id='name'] input").setValue("Смолик Владислав");
         $("[data-test-id='phone'] input").setValue("+79146742395");
         $("[data-test-id='agreement'] span").click();
@@ -33,10 +32,9 @@ public class SelenideTest {
         String expected = "Успешно!";
         String actual = $x("//*[contains(text(),'Успешно!')]").getText().trim();
         assertEquals(expected, actual);
-        String expected1 = "Встреча успешно забронирована на 12.05.2023";
+        String expected1 = "Встреча успешно забронирована на " + currentDate;
         String actual1 = $x("//*[contains(text(),'Встреча')]").getText().trim();
         assertEquals(expected1, actual1);
-
     }
-
 }
+
