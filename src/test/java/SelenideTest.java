@@ -1,3 +1,4 @@
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
@@ -6,7 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.appear;
-import static com.codeborne.selenide.Condition.disappear;
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,13 +29,9 @@ public class SelenideTest {
         $("[data-test-id='phone'] input").setValue("+79146742395");
         $("[data-test-id='agreement'] span").click();
         $x("//*[contains(text(),'Забронировать')]").click();
-        $("[data-test-id='notification']").should(appear, Duration.ofSeconds(14));
-        String expected = "Успешно!";
-        String actual = $x("//*[contains(text(),'Успешно!')]").getText().trim();
-        assertEquals(expected, actual);
-        String expected1 = "Встреча успешно забронирована на " + currentDate;
-        String actual1 = $x("//*[contains(text(),'Встреча')]").getText().trim();
-        assertEquals(expected1, actual1);
+        $(".notification__content")
+                .shouldBe(appear, Duration.ofSeconds(14))
+                .shouldHave(Condition.exactText("Встреча успешно забронирована на " + currentDate));
     }
 }
 
