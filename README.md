@@ -1,1 +1,1 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/h0nomick302pe45s?svg=true)](https://ci.appveyor.com/project/StevoTheRad/selenide)
+[![Java CI with Gradle](https://github.com/StevoTheRad/Selenide/actions/workflows/blank.yml/badge.svg?branch=main)](https://github.com/StevoTheRad/Selenide/actions/workflows/blank.yml)
